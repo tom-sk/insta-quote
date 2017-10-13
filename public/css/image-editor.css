@@ -1,0 +1,124 @@
+#image-app {
+    /* width: 1000px; */
+    /* height: 100%; */
+    /* display:flex; */
+    /* margin:10px; */
+    padding-top:60px;
+  }
+  .image-editor-header {
+    margin:10px;
+  }
+  section {
+    margin:auto;
+  }
+  .title, .subtitle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .subtitle {
+    flex-direction: column;
+  }
+  .save-buttons {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-evenly !important;
+  }
+  .image-editor{
+    margin:10px;;
+  }
+  .left, .right {
+    /* width:100%; */
+    position: relative;
+  }
+  
+  .left {
+    flex-shrink: 0;
+    user-select: none;
+    border: 2px solid black;
+    width:420px !important;
+    height:420px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    background: url(https://images.unsplash.com/photo-1500964757637-c85e8a162699?dpr=1&auto=compress,format&fit=crop&w=1078&h=&q=80&cs=tinysrgb&crop=)
+    
+  }
+.right {
+  width:100% !important;
+}
+  .quote{
+    z-index:10;
+    padding:20px;
+    width:300px;
+  }
+  .author {
+      padding-top:20px;
+  }
+  .overlay {
+    z-index: 1;
+    display:flex;
+    width: 87%;
+    height:87%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+  }
+  .style-bar {
+      margin: auto;
+      margin-bottom:20px;
+      /* background: hotpink; */
+      border-bottom: 2px solid black;
+      width:100px;
+      height: 10px;
+  }
+.quote-text {
+  transition: transform 0.4s;
+}
+.is-moved {
+  transform: translateX(145px);
+}
+.typewriter {
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  animation: 
+    typing 3.5s steps(40, end),
+    blink-caret .75s step-end infinite;
+}
+
+.hash{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-grid {
+  display:flex;
+  justify-content: space-between;
+}
+.image-grid figure {
+  margin: 5px;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: orange; }
+}
+
+@media (max-width: 1008px) {
+  .image-editor {
+    flex-direction:column;
+  }
+  .left {
+    margin:auto;
+  }
+}
