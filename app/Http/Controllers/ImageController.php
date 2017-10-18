@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 use App\Template;
 use Image;
 use GifCreator;
@@ -54,11 +55,15 @@ class ImageController extends Controller
     public function postTemplate(Request $request){
 
         $template = new Template;
-        // info($request);
-        $template->options = json_encode($request); 
+        $time  = preg_replace('/[^0-9,]|,[0-9]*$/','',Carbon::now());
         $template->user_id =  Auth::id();
-        $template->image = Storage::url('/foo.jpeg');
+        $template->image = 'templates/'. $time .'template.jpg';
+        $template->quote = $request->quote;
+        $template->author = $request->author;
+        $template->color = 'rgb('.$request->rValue.', '.$request->gValue.', '.$request->bValue.')';
         $template->save();
+        info($template);
+
 
 
         $fontColor = 'rgb('.$request->rValue.', '.$request->gValue.', '.$request->bValue.')';
@@ -132,17 +137,14 @@ class ImageController extends Controller
         $img->rectangle($seporatorYPadding, $i, $dimensions - $seporatorYPadding , $i + 4, function ($draw) use ($fontColor) {
             $draw->background($fontColor);
         });
-        $img->save('templates/bar2.jpg', 100);
+        $img->save('templates/'. $time .'template.jpg', 100);
 
        
     }
     public function getTemplate(){
 
-
         $userTemplates = Auth::user()->userTemplates()->get();
-
-        info($userTemplates);
-
+       
         return view('templates');
     }
 }

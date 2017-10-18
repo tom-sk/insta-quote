@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Template;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TemplateController extends Controller
 {
@@ -24,7 +25,7 @@ class TemplateController extends Controller
      */
     public function create()
     {
-        //
+        return view('new-template');
     }
 
     /**
@@ -57,7 +58,9 @@ class TemplateController extends Controller
      */
     public function edit(Template $template)
     {
-        return view('edit-template');
+        return view('edit-template', [
+            'template' => $template
+        ]);
     }
 
     /**
@@ -84,6 +87,9 @@ class TemplateController extends Controller
     }
     public function templates(Template $template)
     {
-       return view('templates');
+       $userTemplates = Auth::user()->userTemplates()->get();
+       return view('templates', [
+           'userTemplates' => $userTemplates
+       ]);
     }
 }

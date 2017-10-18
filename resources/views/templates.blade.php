@@ -10,16 +10,21 @@
                             Templates
 
                         </p>
-                        <a href='/edit-template' class="button is-info is-right">Create New</a>
+                        <a href='/new-template' class="button is-info is-right">Create New</a>
                     </header>
-                   
-                   
-                   
-                    <figure class="image is-128x128">
-                        <img @click='backgroundSelect' src={{asset('templates/bar2.jpg')}}>
-                    </figure>
-                    <div>Edit</div>
                 </nav>
+               
+                @foreach($userTemplates as $template )
+                    <figure class="image is-128x128">
+                        <img src={{asset($template->image)}}>
+                    </figure>
+                    <div>
+                        <a href="/edit-template/{{$template->id}}">
+                            Edit
+                        </a>
+                    </div>
+                @endforeach
+
             </div>
         </div>
     </div>

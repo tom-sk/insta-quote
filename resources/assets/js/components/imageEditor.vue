@@ -5,14 +5,17 @@
     <div class='column'>
       <section class="section">
           <div class="container image-editor-header">
-            <h1 class="title">Edit Template</h1>
-            <p class="subtitle">
-              Edit custom template
+            
+            <h1 v-if='!template' class="title">New Template</h1>
+            <h1 v-if='template' class="title">Edit Template</h1>
 
+            <p class="subtitle">
+
+              <span v-if='template'>Edit custom template</span>
+              <span v-if='!template'>Create a new custom template</span>
 
               <div class='save-buttons'>
                 <a href='/user-templates'>
-  
                   <button class='button'  @click="onSubmit">Save</button>
                 </a>
                 
@@ -44,6 +47,8 @@
             </div>
 
         </div>
+
+        <img :src="form.userImage" />
     </div>
   
     <vue-scrollbar classes="my-scrollbar" ref="Scrollbar" :speed='73'>
@@ -323,6 +328,16 @@
 </div>
 
 
+<div class='field'>
+  <div v-if="!form.userImage">
+    <input type="file" @change="onFileChange">
+  </div>
+  <div v-else>
+    <button class="button" @click="removeImage">Remove image</button>
+  </div>
+
+</div>
+
 
 
 
@@ -342,15 +357,17 @@ import vueSlider from 'vue-slider-component';
 import Form from '../helper/Form.js'
 
 export default {
-    components: {
-        vueSlider
-    },
+  components: {
+      vueSlider
+  },
+  props: ['template'],
   data () {
     return {
       form: new Form({
         quote: 'The Way Get Started Is To Quit Talking And Begin Doing.',
         author:'Walt Disney',
         image: 'https://images.unsplash.com/photo-1500964757637-c85e8a162699?dpr=1&auto=compress,format&fit=crop&w=1078&h=&q=80&cs=tinysrgb&crop=',
+        userImage: '',
         typedQuote: '',
         isMoving: false,
         rValue:1,
@@ -387,6 +404,13 @@ export default {
         bSliderColor: {"backgroundColor": `#03A9F4`},
       })
     }
+  },
+  created(){
+
+    if(this.template){
+      this.form.quote = this.template.quote
+    }
+    
   },
   computed: {
     borderObject(){
@@ -530,6 +554,25 @@ export default {
     },
     backgroundSelect(e){
       this.form.image = e.currentTarget.src;
+    },
+    onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      this.createImage(files[0]);
+    },
+    createImage(file) {
+      var image = new Image();
+      var reader = new FileReader();
+      var vm = this;
+
+      reader.onload = (e) => {
+        vm.form.userImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    removeImage: function (e) {
+      this.form.userImage = '';
     }
   }
 }

@@ -18,6 +18,7 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('image-editor', require('./components/imageEditor.vue'));
+Vue.component('orders', require('./components/orders.vue'));
 Vue.component('vue-scrollbar', require('./components/vue2-scrollbar/src/js/components/vue-scrollbar.vue'));
 
 const app = new Vue({

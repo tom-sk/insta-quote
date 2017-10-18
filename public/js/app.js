@@ -896,6 +896,7 @@ window.Vue = __webpack_require__(35);
 
 Vue.component('example-component', __webpack_require__(36));
 Vue.component('image-editor', __webpack_require__(39));
+Vue.component('orders', __webpack_require__(59));
 Vue.component('vue-scrollbar', __webpack_require__(45));
 
 var app = new Vue({
@@ -40113,6 +40114,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -40122,12 +40138,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   components: {
     vueSlider: __WEBPACK_IMPORTED_MODULE_0_vue_slider_component___default.a
   },
+  props: ['template'],
   data: function data() {
     return {
       form: new __WEBPACK_IMPORTED_MODULE_1__helper_Form_js__["a" /* default */]({
         quote: 'The Way Get Started Is To Quit Talking And Begin Doing.',
         author: 'Walt Disney',
         image: 'https://images.unsplash.com/photo-1500964757637-c85e8a162699?dpr=1&auto=compress,format&fit=crop&w=1078&h=&q=80&cs=tinysrgb&crop=',
+        userImage: '',
         typedQuote: '',
         isMoving: false,
         rValue: 1,
@@ -40164,6 +40182,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         bSliderColor: { "backgroundColor": '#03A9F4' }
       })
     };
+  },
+  created: function created() {
+
+    if (this.template) {
+      this.form.quote = this.template.quote;
+    }
   },
 
   computed: {
@@ -40303,6 +40327,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     backgroundSelect: function backgroundSelect(e) {
       this.form.image = e.currentTarget.src;
+    },
+    onFileChange: function onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+      this.createImage(files[0]);
+    },
+    createImage: function createImage(file) {
+      var image = new Image();
+      var reader = new FileReader();
+      var vm = this;
+
+      reader.onload = function (e) {
+        vm.form.userImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+
+    removeImage: function removeImage(e) {
+      this.form.userImage = '';
     }
   }
 });
@@ -40579,12 +40622,22 @@ var render = function() {
       _c("div", { staticClass: "column" }, [
         _c("section", { staticClass: "section" }, [
           _c("div", { staticClass: "container image-editor-header" }, [
-            _c("h1", { staticClass: "title" }, [_vm._v("Edit Template")]),
+            !_vm.template
+              ? _c("h1", { staticClass: "title" }, [_vm._v("New Template")])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.template
+              ? _c("h1", { staticClass: "title" }, [_vm._v("Edit Template")])
+              : _vm._e(),
             _vm._v(" "),
             _c("p", { staticClass: "subtitle" }, [
-              _vm._v(
-                "\r\n              Edit custom template\r\n\r\n\r\n              "
-              )
+              _vm.template
+                ? _c("span", [_vm._v("Edit custom template")])
+                : _vm._e(),
+              _vm._v(" "),
+              !_vm.template
+                ? _c("span", [_vm._v("Create a new custom template")])
+                : _vm._e()
             ]),
             _c("div", { staticClass: "save-buttons" }, [
               _c("a", { attrs: { href: "/user-templates" } }, [
@@ -40644,7 +40697,9 @@ var render = function() {
                   ]
                 )
               ])
-            ])
+            ]),
+            _vm._v(" "),
+            _c("img", { attrs: { src: _vm.form.userImage } })
           ]
         ),
         _vm._v(" "),
@@ -41346,6 +41401,26 @@ var render = function() {
                     )
                   ])
                 ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "field" }, [
+                !_vm.form.userImage
+                  ? _c("div", [
+                      _c("input", {
+                        attrs: { type: "file" },
+                        on: { change: _vm.onFileChange }
+                      })
+                    ])
+                  : _c("div", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button",
+                          on: { click: _vm.removeImage }
+                        },
+                        [_vm._v("Remove image")]
+                      )
+                    ])
               ])
             ])
           ]
@@ -42332,6 +42407,95 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(60)
+/* template */
+var __vue_template__ = __webpack_require__(61)
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\orders.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] orders.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7a415ccc", Component.options)
+  } else {
+    hotAPI.reload("data-v-7a415ccc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('Component mounted.');
+    }
+});
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {}, [_vm._v("\r\n    Test\r\n")])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-7a415ccc", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

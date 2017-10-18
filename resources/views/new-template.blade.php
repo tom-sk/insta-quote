@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="columns is-centered">
-            <image-editor :template="{{$template}}" ></image-editor>
+            <image-editor></image-editor>
         </div>
     </div>
 @endsection
