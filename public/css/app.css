@@ -10856,3 +10856,9 @@ label.panel-block:hover {
   padding: 3rem 1.5rem 6rem;
 }
 
+.button:focus:not(:active),
+.button.is-focused:not(:active) {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+

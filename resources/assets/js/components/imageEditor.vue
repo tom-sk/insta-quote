@@ -33,18 +33,13 @@
     <div class='column is-6 left' :style="borderObject">
     <!-- <div class='column is-6 left' :style="{borderObject, backgroundImage: 'url(' + image + ')', 'background-position': 'center'  }"> -->
         <div class='overlay' :style="overlayObject">
-
-            <div class="quote">
-                <div @click='moveDiv' :class="{'is-moved': form.isMoving}" class='' :style="quoteTextObject">
-                  {{ form.quote }}
-                </div>
-
-                <div class='author' :style="authorTextObject">
-                  <div class="style-bar" :style='barObject'></div>
-                  {{ form.author }}
-                </div>
-
-            </div>
+          <template-image-text
+            :quote='form.quote' 
+            :quoteStyle='quoteTextObject'
+            :author='form.author'
+            :authorStyle='authorTextObject'
+            :styleBarStle='barObject'>
+          </template-image-text>
 
         </div>
 
@@ -178,23 +173,13 @@
         <!-- QUOTE TEXT CHANGE -->
         <div class='field'>
               <label class="label">Quote</label>
-              <div class="field has-addons">
-                  <p class="control">
-                      <button class="button" @click='quoteTextPositionChange' value='left'>
-                          <i class="fa fa-align-left" aria-hidden="true" value='left'></i>
-                      </button>
-                  </p>
-                  <p class="control">
-                      <button class="button"  @click='quoteTextPositionChange' value='center'>
-                          <i class="fa fa-align-center" aria-hidden="true" value='center'></i>
-                      </button> 
-                  </p>
-                  <p class="control">
-                      <button class="button"  @click='quoteTextPositionChange' value='right'>
-                          <i class="fa fa-align-right" aria-hidden="true" value='right'></i>
-                      </button>
-                  </p>
-              </div>
+              
+                <button-group @selectValue="quoteTextPositionChange">
+                  <btn name="<i class='fa fa-align-left' value='left'></i>" :selected="true" value='left'></btn>
+                  <btn name="<i class='fa fa-align-center' value='center'></i>" :selected="false" value='center'></btn>
+                  <btn name="<i class='fa fa-align-right' value='right'></i>" :selected="false" value='right'></btn>
+                </button-group>
+
 
               <div class='field'>
                   <div class="control">
@@ -216,17 +201,17 @@
           <div class="field has-addons">
               <p class="control" value='display'>
                   <button class="button" @click='authorTextPositionChange' value='left'>
-                      <i class="fa fa-align-left" aria-hidden="true" value='left'></i>
+                      <i class="fa fa-align-left" @click='authorTextPositionChange' aria-hidden="true" value='left'></i>
                   </button>
               </p>
               <p class="control">
                   <button class="button"  @click='authorTextPositionChange' value='center'>
-                      <i class="fa fa-align-center" aria-hidden="true" value='center'></i>
+                      <i class="fa fa-align-center" @click='authorTextPositionChange' aria-hidden="true" value='center'></i>
                   </button> 
               </p>
               <p class="control">
                   <button class="button"  @click='authorTextPositionChange' value='right'>
-                      <i class="fa fa-align-right" aria-hidden="true" value='right'></i>
+                      <i class="fa fa-align-right" @click='authorTextPositionChange' aria-hidden="true" value='right'></i>
                   </button>
               </p>
           </div>
@@ -256,17 +241,17 @@
     <div class="field has-addons">
         <p class="control" value='display'>
             <button class="button"   @click='barPositionChange' value='left'>
-                <i class="fa fa-align-left" aria-hidden="true" value='left'></i>
+                <i class="fa fa-align-left" click='barPositionChange' aria-hidden="true" value='left'></i>
             </button>
         </p>
         <p class="control">
             <button class="button"  @click='barPositionChange' value='center'>
-                <i class="fa fa-align-center" aria-hidden="true" value='center'></i>
+                <i class="fa fa-align-center" click='barPositionChange' aria-hidden="true" value='center'></i>
             </button> 
         </p>
         <p class="control">
             <button class="button"  @click='barPositionChange' value='right'>
-                <i class="fa fa-align-right" aria-hidden="true" value='right'></i>
+                <i class="fa fa-align-right" click='barPositionChange' aria-hidden="true" value='right'></i>
             </button>
         </p>
     </div>
@@ -277,11 +262,11 @@
 
         <p class="control">
             <button class="button"  @click='barShow' value='display'>
-                <i class="fa fa-minus" aria-hidden="true"></i>
+                Solid
              </button> 
         </p>
         <p class="control">
-            <button class="button"  @click='barShow' value='none'>
+            <button class="button" @click='barShow' value='none'>
               None
             </button>
         </p>
@@ -468,8 +453,9 @@ export default {
       this.form.post('/new-template');
       // axios.get('/new-template');
     },
-    quoteTextPositionChange(e){
-      this.form.quoteTextStyle.position = e.currentTarget.value;
+    quoteTextPositionChange(href, val){
+      // console.log(b);
+      this.form.quoteTextStyle.position = val;
     },
     authorTextPositionChange(e){
       this.form.authorTextStyle.position = e.currentTarget.value;
@@ -532,6 +518,7 @@ export default {
       }
     },
     barShow(e){
+      console.log(e.target.value);
       if(e.target.value == 'none'){
         this.form.barStyle.borderWidth = '0px'
       } else if(e.target.value == 'display'){

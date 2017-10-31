@@ -50,7 +50,9 @@
   .quote{
     z-index:10;
     padding:20px;
-    width:300px;
+    width:350px;
+    word-wrap: break-word;
+    overflow: hidden;
   }
   .author {
       padding-top:20px;
