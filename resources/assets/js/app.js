@@ -24,6 +24,8 @@ Vue.component('order-select', require('./components/order-select.vue'));
 Vue.component('template-image-text', require('./components/template-image-text.vue'));
 Vue.component('vue-scrollbar', require('./components/vue2-scrollbar/src/js/components/vue-scrollbar.vue'));
 Vue.component('btn', require('./components/general/btn.vue'));
+Vue.component('font-select', require('./components/general/font-select.vue'));
+Vue.component('image-grid', require('./components/general/image-grid.vue'));
 Vue.component('button-group', require('./components/general/button-group.vue'));
 Vue.component('vueSlider', require('vue-slider-component'));
 

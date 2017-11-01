@@ -11,6 +11,9 @@
   section {
     margin:auto;
   }
+  input {
+    text-align: center;
+  }
   .title, .subtitle {
     display: flex !important;
     align-items: center !important;
@@ -33,6 +36,7 @@
   }
   
   .left {
+    top: -140px;
     flex-shrink: 0;
     user-select: none;
     border: 2px solid black;
@@ -95,15 +99,39 @@
   align-items: center;
   justify-content: center;
 }
-
+.image {
+  cursor: pointer;
+}
 .image-grid {
   display:flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 .image-grid figure {
   margin: 5px;
 }
+.watermark {
+  position:absolute;
+  width:100px;
+  bottom: 0px;
+  right: 0px;
+}
 
+.background-image {
+  background-size: cover !important; /* or contain depending on what you want */
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  text-align:center !important;
+  /* margin:auto !important; */
+  padding:0 !important;
+
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
+}
 /* The typing effect */
 @keyframes typing {
   from { width: 0 }
@@ -122,5 +150,6 @@
   }
   .left {
     margin:auto;
+    top: 0px;
   }
 }

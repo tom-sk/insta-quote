@@ -1,5 +1,5 @@
 <template>
-<div id="image-app" class="">
+<div id="image-app" class="container">
               
   <div class='columns '>
     <div class='column'>
@@ -21,8 +21,6 @@
                 
               </div>
 
-
-
             </p>
           </div>
         </section>
@@ -30,8 +28,7 @@
   </div>
 
   <div class='columns image-editor'>
-    <div class='column is-6 left' :style="borderObject">
-    <!-- <div class='column is-6 left' :style="{borderObject, backgroundImage: 'url(' + image + ')', 'background-position': 'center'  }"> -->
+    <div class='column is-6 left background-image' :style="borderObject">
         <div class='overlay' :style="overlayObject">
           <template-image-text
             :quote='form.quote' 
@@ -43,84 +40,47 @@
 
         </div>
 
-        <img :src="form.userImage" />
+        <img :style="watermarkObject" class='watermark' :src="form.userImage" />
     </div>
   
-    <vue-scrollbar classes="my-scrollbar" ref="Scrollbar" :speed='73'>
-    <div class='column is-6 right'>
+    
+    <div class='column'>
         <div class='field'>
-            <label class="label">Change Background Image</label>
+            <label class="label">Background Image</label>
         </div>
 
-        <div class='field image-grid'>
-        
-          <figure class="image is-128x128">
-            <img @click='backgroundSelect' src="https://images.unsplash.com/photo-1500964757637-c85e8a162699?dpr=1&auto=compress,format&fit=crop&w=1078&h=&q=80&cs=tinysrgb&crop=">
-          </figure>
-
-          <figure class="image is-128x128">
-            <img @click='backgroundSelect' src="https://images.unsplash.com/photo-1428447207228-b396f310848b?dpr=1&auto=compress,format&fit=crop&w=1050&h=&q=80&cs=tinysrgb&crop=">
-          </figure>
-
-          <figure class="image is-128x128">
-            <img @click='backgroundSelect' src="https://images.unsplash.com/photo-1472806679307-eab7abd1eb32?dpr=1&auto=compress,format&fit=crop&w=1050&h=&q=80&cs=tinysrgb&crop=">
-          </figure>
-
-          <figure class="image is-128x128">
-            <img @click='backgroundSelect' src="https://images.unsplash.com/photo-1468818461933-b1d79f62434e?dpr=1&auto=compress,format&fit=crop&w=1051&h=&q=80&cs=tinysrgb&crop=">
-          </figure>
-
+        <!-- IMAGE GRID -->
+        <div class='field '>
+          <image-grid @selectBg='backgroundSelect' :images='form.images'></image-grid>
         </div>
 
         <!-- QUOTE TEXT -->
-
-        <div class="field">
-          <label class="label">Quote</label>
-          <div class="control">
-            <textarea v-model='form.quote' class='textarea'></textarea>
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Author</label>
-          <div class="control">
-            <input class="input" v-model='form.author' type="text">
-          </div>
-        </div>
-
-
-
-
-
-      <!-- IMAGE BORDER -->
-            <div class='field'>
-                <label class="label">Image Border</label>
-
-                <div class="field has-addons">
-                    <p class="control" @click='imageBorderChange' value='display'>
-                        <button class="button" @click='imageBorderChange' value='display'>
-                            Border
-                        </button>
-                    </p>
-                    <p class="control">
-                        <button class="button" @click='imageBorderChange' value='none'>
-                            None
-                        </button> 
-                    </p>
-                </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Quote</label>
+              <div class="control">
+                <textarea class='textarea' v-model='form.quote'></textarea>
+              </div>
             </div>
-
-
-
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Author</label>
+              <div class="control">
+                <textarea class='textarea' v-model='form.author' type="text"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- COLOUR CHANGE -->
         <div class='field'>
           <div class='field'>
-            <label class="label">Color</label>
+            <label class="label">Text Color</label> <div class=''></div>
           </div>
           
           <div class='field'>
-              Red
             <vue-slider 
               ref="slider" 
               v-model="form.rValue" 
@@ -128,7 +88,6 @@
               :processStyle='form.rSliderColor'>
             </vue-slider>
 
-              Green
             <vue-slider 
               ref="slider" 
               v-model="form.gValue" 
@@ -136,7 +95,6 @@
               :processStyle='form.gSliderColor'>
             </vue-slider>
 
-            Blue
             <vue-slider 
               ref="slider" 
               v-model="form.bValue" 
@@ -146,23 +104,19 @@
           </div>
 
           <div class='columns'>
-              <div class="column is-2 field is-marginless hash">
-                <i class="fa fa-hashtag" aria-hidden="true"></i>
-              </div>
-
-              <div class="column is-3 field is-marginless">
+              <div class="column field is-marginless">
                   <div class="control">
                     <input class="input" v-model="form.rValue" type='number'>
                   </div>
                 </div>
 
-                <div class="column is-3 field is-marginless">
+                <div class="column field is-marginless">
                   <div class="control">
                     <input class="input" v-model="form.gValue" type='number'>
                   </div>
                 </div>
 
-                <div class="column is-3 field is-marginless">
+                <div class="column field is-marginless">
                   <div class="control">
                     <input class="input" v-model="form.bValue" type='number'>
                   </div>
@@ -172,163 +126,109 @@
           </div>
         <!-- QUOTE TEXT CHANGE -->
         <div class='field'>
-              <label class="label">Quote</label>
-              
+          <div class="columns">
+            <div class="column">
+              <div class='field'>
+                <label class="label">Quote</label>
                 <button-group @selectValue="quoteTextPositionChange">
-                  <btn name="<i class='fa fa-align-left' value='left'></i>" :selected="true" value='left'></btn>
-                  <btn name="<i class='fa fa-align-center' value='center'></i>" :selected="false" value='center'></btn>
+                  <btn name="<i class='fa fa-align-left' value='left'></i>" :selected="false" value='left'></btn>
+                  <btn name="<i class='fa fa-align-center' value='center'></i>" :selected="true" value='center'></btn>
                   <btn name="<i class='fa fa-align-right' value='right'></i>" :selected="false" value='right'></btn>
                 </button-group>
 
-
-              <div class='field'>
-                  <div class="control">
-                      <div class="select">
-                          <select  v-model='form.quoteTextStyle.fontType'>
-                              <option value="Arial">Arial</option>
-                              <option value="Courier">Courier</option>
-                              <option value="Verdana">Verdana</option>
-                              <option value="Georgia">Georgia</option>
-                          </select>
-                      </div>
-                  </div>
+                <font-select @selectFont="setQuoteFont" :fonts="form.fonts"></font-select>
               </div>
+            </div>
+            <div class="column">
+      
+              <label class="label">Author</label>
+      
+              <button-group @selectValue="authorTextPositionChange">
+                <btn name="<i class='fa fa-align-left' value='left'></i>" :selected="false" value='left'></btn>
+                <btn name="<i class='fa fa-align-center' value='center'></i>" :selected="true" value='center'></btn>
+                <btn name="<i class='fa fa-align-right' value='right'></i>" :selected="false" value='right'></btn>
+              </button-group>
+        
+              <font-select @selectFont="setAuthorFont" :fonts="form.fonts"></font-select>
+
+            </div>
+            <div class="column">
+              <!-- STYLE BAR -->
+              <label class="label">Style Bar</label>
+              
+                <button-group @selectValue="barPositionChange">
+                  <btn name="<i class='fa fa-align-left' value='left'></i>" :selected="false" value='left'></btn>
+                  <btn name="<i class='fa fa-align-center' value='center'></i>" :selected="true" value='center'></btn>
+                  <btn name="<i class='fa fa-align-right' value='right'></i>" :selected="false" value='right'></btn>
+                </button-group>
+
+                <button-group @selectValue="barShow">
+                  <btn name="Solid" :selected="true" value='display'></btn>
+                  <btn name="None" :selected="false" value='none'></btn>
+                </button-group>
+            </div>
+            <div class='column'>
+              <!-- IMAGE BORDER -->
+              <div class='field'>
+                <label class="label">Image Border</label>
+              
+                <div class="field has-addons">
+              
+                  <button-group @selectValue="imageBorderChange">
+                    <btn name="On" :selected="true" value='display'></btn>
+                    <btn name="Off" :selected="false" value='none'></btn>
+                  </button-group>
+              
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
        
 
-      <div class='field'>
-          <label class="label">Author</label>
-          <div class="field has-addons">
-              <p class="control" value='display'>
-                  <button class="button" @click='authorTextPositionChange' value='left'>
-                      <i class="fa fa-align-left" @click='authorTextPositionChange' aria-hidden="true" value='left'></i>
-                  </button>
-              </p>
-              <p class="control">
-                  <button class="button"  @click='authorTextPositionChange' value='center'>
-                      <i class="fa fa-align-center" @click='authorTextPositionChange' aria-hidden="true" value='center'></i>
-                  </button> 
-              </p>
-              <p class="control">
-                  <button class="button"  @click='authorTextPositionChange' value='right'>
-                      <i class="fa fa-align-right" @click='authorTextPositionChange' aria-hidden="true" value='right'></i>
-                  </button>
-              </p>
+        <!-- OVERLAY CHANGE -->
+        <div class='field'>
+          <label class="label">Overlay</label>
+
+          <button-group @selectValue="overlayChange">
+            <btn name="Overlay" :selected="true" value='overlay'></btn>
+            <btn name="Border" :selected="false" value='border'></btn>
+            <btn name="Bars" :selected="false" value='bars'></btn>
+            <btn name="None" :selected="false" value='none'></btn>
+          </button-group>
+
+        </div>
+
+        <div class='field'>
+
+          <label class="label">Water Mark/Copyright</label>
+
+          <div v-if="!form.userImage">
+            <input type="file" @change="onFileChange">
           </div>
+          <div v-else>
+            <div class="field">
+              <button class="button" @click="removeImage">Remove image</button>
+            </div>
 
-          <div class='field'>
-              <div class="control">
-                  <div class="select">
-                      <select  v-model='form.authorTextStyle.fontType'>
-                          <option value="Arial">Arial</option>
-                          <option value="Courier">Courier</option>
-                          <option value="Verdana">Verdana</option>
-                          <option value="Georgia">Georgia</option>
-                      </select>
-                  </div>
-              </div>
+
+            <button-group @selectValue="watermarkPositionChange">
+              <btn name="Top" :selected="false" value='top'></btn>
+              <btn name="Bottom" :selected="true" value='bottom'></btn>
+            </button-group>
+
+            <button-group @selectValue="watermarkPositionChange">
+              <btn name="<i class='fa fa-align-left' value='left'></i>" :selected="false" value='left'></btn>
+              <btn name="<i class='fa fa-align-center' value='center'></i>" :selected="true" value='center'></btn>
+              <btn name="<i class='fa fa-align-right' value='right'></i>" :selected="false" value='right'></btn>
+            </button-group>
+
+            
           </div>
-    </div>
-       
-  
-  <!-- STYLE BAR -->
+        </div>
 
-<div class='field'>
-  <label  class="label">Style Bar</label>
-  <div class="field">
-    <label>Position</label>
-  </div>
-    <div class="field has-addons">
-        <p class="control" value='display'>
-            <button class="button"   @click='barPositionChange' value='left'>
-                <i class="fa fa-align-left" click='barPositionChange' aria-hidden="true" value='left'></i>
-            </button>
-        </p>
-        <p class="control">
-            <button class="button"  @click='barPositionChange' value='center'>
-                <i class="fa fa-align-center" click='barPositionChange' aria-hidden="true" value='center'></i>
-            </button> 
-        </p>
-        <p class="control">
-            <button class="button"  @click='barPositionChange' value='right'>
-                <i class="fa fa-align-right" click='barPositionChange' aria-hidden="true" value='right'></i>
-            </button>
-        </p>
-    </div>
-    <div class="field">
-      <label>Type</label>
-    </div>
-    <div class="field has-addons">
-
-        <p class="control">
-            <button class="button"  @click='barShow' value='display'>
-                Solid
-             </button> 
-        </p>
-        <p class="control">
-            <button class="button" @click='barShow' value='none'>
-              None
-            </button>
-        </p>
-
-    </div>
-
-</div>
-
-
-
-
-
-
-
-
-
-  <!-- OVERLAY CHANGE -->
-<div class='field'>
-    <label  class="label">Overlay</label>
-    <div class="field has-addons">
-
-        <p class="control">
-            <button class="button" @click='overlayChange' value='overlay'>
-              Overlay
-            </button>
-        </p>
-        <p class="control">
-            <button class="button" @click='overlayChange' value='border'>
-              Border
-            </button> 
-        </p>
-        <p class="control">
-            <button class="button" @click='overlayChange' value='bars'>
-              Bars
-            </button>
-        </p>
-        <p class="control">
-            <button class="button" @click='overlayChange' value='none'>
-              None
-            </button>
-        </p>
-
-    </div>
-</div>
-
-
-<div class='field'>
-  <div v-if="!form.userImage">
-    <input type="file" @change="onFileChange">
-  </div>
-  <div v-else>
-    <button class="button" @click="removeImage">Remove image</button>
-  </div>
-
-</div>
-
-
-
-
-  
       </div>
-    </vue-scrollbar>
+    
   </div>
 </div> <!-- end of app -->
     
@@ -355,9 +255,9 @@ export default {
         userImage: '',
         typedQuote: '',
         isMoving: false,
-        rValue:1,
-        gValue:1,
-        bValue:1,
+        rValue:255,
+        gValue:255,
+        bValue:255,
         quoteTextStyle: {
           position: 'center',
           fontSize: '25',
@@ -384,9 +284,47 @@ export default {
         borderStyle: {
           border: ''
         },
+        watermarkStyle: {
+          top: '',
+          bottom: '',
+          left: '',
+          right: ''
+        },
         rSliderColor: {"backgroundColor": `#F44336`},
         gSliderColor: {"backgroundColor": `#00C853`},
         bSliderColor: {"backgroundColor": `#03A9F4`},
+        fonts: [
+          {
+            name: 'Arial',
+            fontSize: '16px'
+          }, 
+          {
+            name: 'Courier',
+            fontSize: '18px'
+          }, 
+          {
+            name: 'Verdana',
+            fontSize: '15px'
+          }, 
+          {
+            name: 'Georgia',
+            fontSize: '17px'
+          }
+        ],
+        images: [
+          {
+            src: 'https://images.unsplash.com/photo-1500964757637-c85e8a162699?dpr=1&auto=compress,format&fit=crop&w=1078&h=&q=80&cs=tinysrgb&crop='
+          },
+          {
+            src: 'https://images.unsplash.com/photo-1428447207228-b396f310848b?dpr=1&auto=compress,format&fit=crop&w=1050&h=&q=80&cs=tinysrgb&crop='
+          },
+          {
+            src: 'https://images.unsplash.com/photo-1472806679307-eab7abd1eb32?dpr=1&auto=compress,format&fit=crop&w=1050&h=&q=80&cs=tinysrgb&crop='
+          },
+          {
+            src: 'https://images.unsplash.com/photo-1468818461933-b1d79f62434e?dpr=1&auto=compress,format&fit=crop&w=1051&h=&q=80&cs=tinysrgb&crop='
+          }
+        ]
       })
     }
   },
@@ -404,7 +342,12 @@ export default {
         'color' : `rgb(${this.form.rValue}, ${this.form.gValue}, ${this.form.bValue})`,
         'border-width': this.form.borderStyle.border,
         'background': 'url(' + this.form.image +  ')',
-        'background-position': 'center'
+        'background-size': 'cover', /* or contain depending on what you want */
+        'background-position': 'center center',
+        'background-repeat': 'no-repeat',
+       ' text-align':'center',
+        'margin': 'auto',
+        'padding': '0',
       }
     },
     processStyle2(){
@@ -446,6 +389,14 @@ export default {
         'border-color': `rgb(${this.form.rValue}, ${this.form.gValue}, ${this.form.bValue})`,
         'border-width' : this.form.barStyle.borderWidth
       }
+    },
+    watermarkObject(){
+      return {
+        'top': this.form.watermarkStyle.top,
+        'bottom': this.form.watermarkStyle.bottom,
+        'left': this.form.watermarkStyle.left,
+        'right': this.form.watermarkStyle.right
+      }
     }
   },
   methods: {
@@ -457,18 +408,21 @@ export default {
       // console.log(b);
       this.form.quoteTextStyle.position = val;
     },
-    authorTextPositionChange(e){
-      this.form.authorTextStyle.position = e.currentTarget.value;
+    authorTextPositionChange(href, val){
+      this.form.authorTextStyle.position = val;
     },
-    fontChange(e){
-      this.form.quoteTextStyle.fontType = e.target.value;
+    setAuthorFont(val){
+      this.form.authorTextStyle.fontType = val;
     },
-    overlayChange(e){
+    setQuoteFont(val){
+      this.form.quoteTextStyle.fontType = val;
+    },
+    overlayChange(e, val){
       var borderColor = `rgb(${this.form.rValue}, ${this.form.gValue}, ${this.form.bValue})`;
       var borderVal = `2px solid ${borderColor}`;
       var noBorder = `0px solid ${borderColor}`;
 
-      if(e.target.value == 'none') {
+      if(val == 'none') {
 
         this.form.overlayStyle.backgroundOpacity = 0;
         this.form.overlayStyle.borderTop = noBorder;
@@ -476,7 +430,7 @@ export default {
         this.form.overlayStyle.borderRight = noBorder;
         this.form.overlayStyle.borderBottom = noBorder;
         
-      } else if(e.target.value == 'border'){
+      } else if(val == 'border'){
 
         this.form.overlayStyle.backgroundOpacity = 0;
         this.form.overlayStyle.borderTop = borderVal;
@@ -484,7 +438,7 @@ export default {
         this.form.overlayStyle.borderRight = borderVal;
         this.form.overlayStyle.borderBottom = borderVal;
 
-      } else if(e.target.value == 'bars'){
+      } else if(val == 'bars'){
 
         this.form.overlayStyle.backgroundOpacity = 0;
         this.form.overlayStyle.borderTop = borderVal;
@@ -492,7 +446,7 @@ export default {
         this.form.overlayStyle.borderLeft = noBorder;
         this.form.overlayStyle.borderRight = noBorder;
 
-      } else if(e.target.value == 'overlay'){
+      } else if(val == 'overlay'){
 
         this.form.overlayStyle.backgroundOpacity = 0.3;
         this.form.overlayStyle.borderTop = noBorder;
@@ -501,34 +455,56 @@ export default {
         this.form.overlayStyle.borderBottom = noBorder;
       }
     },
-    barPositionChange(e){
-      if(e.currentTarget.value == 'right'){
+    barPositionChange(e, val){
+      if(val == 'right'){
         // this.form.barStyle.margin = 'auto';
         this.form.barStyle.marginRight = '0px';
         this.form.barStyle.marginLeft = 'auto';
-      } else if(e.currentTarget.value == 'left'){
+      } else if(val == 'left'){
         this.form.barStyle.marginLeft = '0px';
         this.form.barStyle.marginRight = 'auto';
 
-      } else if(e.currentTarget.value == 'center') {
+      } else if(val == 'center') {
         
         this.form.barStyle.marginRight = 'auto';
         this.form.barStyle.marginLeft = 'auto';
 
       }
     },
-    barShow(e){
-      console.log(e.target.value);
-      if(e.target.value == 'none'){
+    watermarkPositionChange(e, val){
+      if(val == 'right'){
+        // this.form.barStyle.margin = 'auto';
+        this.form.watermarkStyle.right = '0px';
+        this.form.watermarkStyle.left = 'auto';
+      } else if(val == 'left'){
+        this.form.watermarkStyle.left = '0px';
+        this.form.watermarkStyle.right = 'auto';
+
+      } else if(val == 'center') {
+        
+        this.form.watermarkStyle.right = 'auto';
+        this.form.watermarkStyle.left = 'auto';
+
+      } else if (val == 'top') {
+        this.form.watermarkStyle.top = '0px';
+        this.form.watermarkStyle.bottom = 'auto';
+      } else if (val == 'bottom') {
+        this.form.watermarkStyle.bottom = '0px';
+        this.form.watermarkStyle.top = 'auto';
+      
+      }
+    },
+    barShow(e, val){
+      if(val == 'none'){
         this.form.barStyle.borderWidth = '0px'
-      } else if(e.target.value == 'display'){
+      } else if(val == 'display'){
         this.form.barStyle.borderWidth = '2px'
       }
     },
-    imageBorderChange(e){
-      if(e.target.value == 'none'){
+    imageBorderChange(href, value){
+      if(value == 'none'){
         this.form.borderStyle.border = '0px'
-      } else if(e.target.value == 'display'){
+      } else if(value == 'display'){
         this.form.borderStyle.border = '2px'
       }
     },
@@ -539,8 +515,9 @@ export default {
       // return str.split('').reverse().join('');
       return str;
     },
-    backgroundSelect(e){
-      this.form.image = e.currentTarget.src;
+    backgroundSelect(val){
+      // this.form.image = e.currentTarget.src;
+      this.form.image = val;
     },
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;

@@ -907,7 +907,9 @@ Vue.component('order-amount', __webpack_require__(48));
 Vue.component('order-select', __webpack_require__(51));
 Vue.component('template-image-text', __webpack_require__(54));
 Vue.component('vue-scrollbar', __webpack_require__(57));
-Vue.component('btn', __webpack_require__(81));
+Vue.component('btn', __webpack_require__(66));
+Vue.component('font-select', __webpack_require__(81));
+Vue.component('image-grid', __webpack_require__(84));
 Vue.component('button-group', __webpack_require__(69));
 Vue.component('vueSlider', __webpack_require__(9));
 
@@ -40026,106 +40028,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -40145,9 +40047,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         userImage: '',
         typedQuote: '',
         isMoving: false,
-        rValue: 1,
-        gValue: 1,
-        bValue: 1,
+        rValue: 255,
+        gValue: 255,
+        bValue: 255,
         quoteTextStyle: {
           position: 'center',
           fontSize: '25',
@@ -40174,9 +40076,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         borderStyle: {
           border: ''
         },
+        watermarkStyle: {
+          top: '',
+          bottom: '',
+          left: '',
+          right: ''
+        },
         rSliderColor: { "backgroundColor": '#F44336' },
         gSliderColor: { "backgroundColor": '#00C853' },
-        bSliderColor: { "backgroundColor": '#03A9F4' }
+        bSliderColor: { "backgroundColor": '#03A9F4' },
+        fonts: [{
+          name: 'Arial',
+          fontSize: '16px'
+        }, {
+          name: 'Courier',
+          fontSize: '18px'
+        }, {
+          name: 'Verdana',
+          fontSize: '15px'
+        }, {
+          name: 'Georgia',
+          fontSize: '17px'
+        }],
+        images: [{
+          src: 'https://images.unsplash.com/photo-1500964757637-c85e8a162699?dpr=1&auto=compress,format&fit=crop&w=1078&h=&q=80&cs=tinysrgb&crop='
+        }, {
+          src: 'https://images.unsplash.com/photo-1428447207228-b396f310848b?dpr=1&auto=compress,format&fit=crop&w=1050&h=&q=80&cs=tinysrgb&crop='
+        }, {
+          src: 'https://images.unsplash.com/photo-1472806679307-eab7abd1eb32?dpr=1&auto=compress,format&fit=crop&w=1050&h=&q=80&cs=tinysrgb&crop='
+        }, {
+          src: 'https://images.unsplash.com/photo-1468818461933-b1d79f62434e?dpr=1&auto=compress,format&fit=crop&w=1051&h=&q=80&cs=tinysrgb&crop='
+        }]
       })
     };
   },
@@ -40194,7 +40124,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'color': 'rgb(' + this.form.rValue + ', ' + this.form.gValue + ', ' + this.form.bValue + ')',
         'border-width': this.form.borderStyle.border,
         'background': 'url(' + this.form.image + ')',
-        'background-position': 'center'
+        'background-size': 'cover', /* or contain depending on what you want */
+        'background-position': 'center center',
+        'background-repeat': 'no-repeat',
+        ' text-align': 'center',
+        'margin': 'auto',
+        'padding': '0'
       };
     },
     processStyle2: function processStyle2() {
@@ -40236,6 +40171,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'border-color': 'rgb(' + this.form.rValue + ', ' + this.form.gValue + ', ' + this.form.bValue + ')',
         'border-width': this.form.barStyle.borderWidth
       };
+    },
+    watermarkObject: function watermarkObject() {
+      return {
+        'top': this.form.watermarkStyle.top,
+        'bottom': this.form.watermarkStyle.bottom,
+        'left': this.form.watermarkStyle.left,
+        'right': this.form.watermarkStyle.right
+      };
     }
   },
   methods: {
@@ -40247,39 +40190,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // console.log(b);
       this.form.quoteTextStyle.position = val;
     },
-    authorTextPositionChange: function authorTextPositionChange(e) {
-      this.form.authorTextStyle.position = e.currentTarget.value;
+    authorTextPositionChange: function authorTextPositionChange(href, val) {
+      this.form.authorTextStyle.position = val;
     },
-    fontChange: function fontChange(e) {
-      this.form.quoteTextStyle.fontType = e.target.value;
+    setAuthorFont: function setAuthorFont(val) {
+      this.form.authorTextStyle.fontType = val;
     },
-    overlayChange: function overlayChange(e) {
+    setQuoteFont: function setQuoteFont(val) {
+      this.form.quoteTextStyle.fontType = val;
+    },
+    overlayChange: function overlayChange(e, val) {
       var borderColor = 'rgb(' + this.form.rValue + ', ' + this.form.gValue + ', ' + this.form.bValue + ')';
       var borderVal = '2px solid ' + borderColor;
       var noBorder = '0px solid ' + borderColor;
 
-      if (e.target.value == 'none') {
+      if (val == 'none') {
 
         this.form.overlayStyle.backgroundOpacity = 0;
         this.form.overlayStyle.borderTop = noBorder;
         this.form.overlayStyle.borderLeft = noBorder;
         this.form.overlayStyle.borderRight = noBorder;
         this.form.overlayStyle.borderBottom = noBorder;
-      } else if (e.target.value == 'border') {
+      } else if (val == 'border') {
 
         this.form.overlayStyle.backgroundOpacity = 0;
         this.form.overlayStyle.borderTop = borderVal;
         this.form.overlayStyle.borderLeft = borderVal;
         this.form.overlayStyle.borderRight = borderVal;
         this.form.overlayStyle.borderBottom = borderVal;
-      } else if (e.target.value == 'bars') {
+      } else if (val == 'bars') {
 
         this.form.overlayStyle.backgroundOpacity = 0;
         this.form.overlayStyle.borderTop = borderVal;
         this.form.overlayStyle.borderBottom = borderVal;
         this.form.overlayStyle.borderLeft = noBorder;
         this.form.overlayStyle.borderRight = noBorder;
-      } else if (e.target.value == 'overlay') {
+      } else if (val == 'overlay') {
 
         this.form.overlayStyle.backgroundOpacity = 0.3;
         this.form.overlayStyle.borderTop = noBorder;
@@ -40288,32 +40234,51 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.form.overlayStyle.borderBottom = noBorder;
       }
     },
-    barPositionChange: function barPositionChange(e) {
-      if (e.currentTarget.value == 'right') {
+    barPositionChange: function barPositionChange(e, val) {
+      if (val == 'right') {
         // this.form.barStyle.margin = 'auto';
         this.form.barStyle.marginRight = '0px';
         this.form.barStyle.marginLeft = 'auto';
-      } else if (e.currentTarget.value == 'left') {
+      } else if (val == 'left') {
         this.form.barStyle.marginLeft = '0px';
         this.form.barStyle.marginRight = 'auto';
-      } else if (e.currentTarget.value == 'center') {
+      } else if (val == 'center') {
 
         this.form.barStyle.marginRight = 'auto';
         this.form.barStyle.marginLeft = 'auto';
       }
     },
-    barShow: function barShow(e) {
-      console.log(e.target.value);
-      if (e.target.value == 'none') {
+    watermarkPositionChange: function watermarkPositionChange(e, val) {
+      if (val == 'right') {
+        // this.form.barStyle.margin = 'auto';
+        this.form.watermarkStyle.right = '0px';
+        this.form.watermarkStyle.left = 'auto';
+      } else if (val == 'left') {
+        this.form.watermarkStyle.left = '0px';
+        this.form.watermarkStyle.right = 'auto';
+      } else if (val == 'center') {
+
+        this.form.watermarkStyle.right = 'auto';
+        this.form.watermarkStyle.left = 'auto';
+      } else if (val == 'top') {
+        this.form.watermarkStyle.top = '0px';
+        this.form.watermarkStyle.bottom = 'auto';
+      } else if (val == 'bottom') {
+        this.form.watermarkStyle.bottom = '0px';
+        this.form.watermarkStyle.top = 'auto';
+      }
+    },
+    barShow: function barShow(e, val) {
+      if (val == 'none') {
         this.form.barStyle.borderWidth = '0px';
-      } else if (e.target.value == 'display') {
+      } else if (val == 'display') {
         this.form.barStyle.borderWidth = '2px';
       }
     },
-    imageBorderChange: function imageBorderChange(e) {
-      if (e.target.value == 'none') {
+    imageBorderChange: function imageBorderChange(href, value) {
+      if (value == 'none') {
         this.form.borderStyle.border = '0px';
-      } else if (e.target.value == 'display') {
+      } else if (value == 'display') {
         this.form.borderStyle.border = '2px';
       }
     },
@@ -40324,8 +40289,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // return str.split('').reverse().join('');
       return str;
     },
-    backgroundSelect: function backgroundSelect(e) {
-      this.form.image = e.currentTarget.src;
+    backgroundSelect: function backgroundSelect(val) {
+      // this.form.image = e.currentTarget.src;
+      this.form.image = val;
     },
     onFileChange: function onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;
@@ -40610,7 +40576,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "image-app" } }, [
+  return _c("div", { staticClass: "container", attrs: { id: "image-app" } }, [
     _c("div", { staticClass: "columns " }, [
       _c("div", { staticClass: "column" }, [
         _c("section", { staticClass: "section" }, [
@@ -40648,357 +40614,260 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "columns image-editor" },
-      [
-        _c(
-          "div",
-          { staticClass: "column is-6 left", style: _vm.borderObject },
-          [
-            _c(
-              "div",
-              { staticClass: "overlay", style: _vm.overlayObject },
-              [
-                _c("template-image-text", {
-                  attrs: {
-                    quote: _vm.form.quote,
-                    quoteStyle: _vm.quoteTextObject,
-                    author: _vm.form.author,
-                    authorStyle: _vm.authorTextObject,
-                    styleBarStle: _vm.barObject
-                  }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("img", { attrs: { src: _vm.form.userImage } })
-          ]
-        ),
+    _c("div", { staticClass: "columns image-editor" }, [
+      _c(
+        "div",
+        {
+          staticClass: "column is-6 left background-image",
+          style: _vm.borderObject
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "overlay", style: _vm.overlayObject },
+            [
+              _c("template-image-text", {
+                attrs: {
+                  quote: _vm.form.quote,
+                  quoteStyle: _vm.quoteTextObject,
+                  author: _vm.form.author,
+                  authorStyle: _vm.authorTextObject,
+                  styleBarStle: _vm.barObject
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("img", {
+            staticClass: "watermark",
+            style: _vm.watermarkObject,
+            attrs: { src: _vm.form.userImage }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "column" }, [
+        _vm._m(0),
         _vm._v(" "),
         _c(
-          "vue-scrollbar",
-          { ref: "Scrollbar", attrs: { classes: "my-scrollbar", speed: 73 } },
+          "div",
+          { staticClass: "field " },
           [
-            _c("div", { staticClass: "column is-6 right" }, [
-              _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [
-                  _vm._v("Change Background Image")
-                ])
-              ]),
+            _c("image-grid", {
+              attrs: { images: _vm.form.images },
+              on: { selectBg: _vm.backgroundSelect }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "columns" }, [
+          _c("div", { staticClass: "column" }, [
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("Quote")]),
               _vm._v(" "),
-              _c("div", { staticClass: "field image-grid" }, [
-                _c("figure", { staticClass: "image is-128x128" }, [
-                  _c("img", {
-                    attrs: {
-                      src:
-                        "https://images.unsplash.com/photo-1500964757637-c85e8a162699?dpr=1&auto=compress,format&fit=crop&w=1078&h=&q=80&cs=tinysrgb&crop="
-                    },
-                    on: { click: _vm.backgroundSelect }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("figure", { staticClass: "image is-128x128" }, [
-                  _c("img", {
-                    attrs: {
-                      src:
-                        "https://images.unsplash.com/photo-1428447207228-b396f310848b?dpr=1&auto=compress,format&fit=crop&w=1050&h=&q=80&cs=tinysrgb&crop="
-                    },
-                    on: { click: _vm.backgroundSelect }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("figure", { staticClass: "image is-128x128" }, [
-                  _c("img", {
-                    attrs: {
-                      src:
-                        "https://images.unsplash.com/photo-1472806679307-eab7abd1eb32?dpr=1&auto=compress,format&fit=crop&w=1050&h=&q=80&cs=tinysrgb&crop="
-                    },
-                    on: { click: _vm.backgroundSelect }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("figure", { staticClass: "image is-128x128" }, [
-                  _c("img", {
-                    attrs: {
-                      src:
-                        "https://images.unsplash.com/photo-1468818461933-b1d79f62434e?dpr=1&auto=compress,format&fit=crop&w=1051&h=&q=80&cs=tinysrgb&crop="
-                    },
-                    on: { click: _vm.backgroundSelect }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("Quote")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "control" }, [
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.quote,
-                        expression: "form.quote"
-                      }
-                    ],
-                    staticClass: "textarea",
-                    domProps: { value: _vm.form.quote },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.form.quote = $event.target.value
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("Author")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "control" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.author,
-                        expression: "form.author"
-                      }
-                    ],
-                    staticClass: "input",
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.form.author },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.form.author = $event.target.value
-                      }
-                    }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("Image Border")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "field has-addons" }, [
-                  _c(
-                    "p",
+              _c("div", { staticClass: "control" }, [
+                _c("textarea", {
+                  directives: [
                     {
-                      staticClass: "control",
-                      attrs: { value: "display" },
-                      on: { click: _vm.imageBorderChange }
-                    },
-                    [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "button",
-                          attrs: { value: "display" },
-                          on: { click: _vm.imageBorderChange }
-                        },
-                        [
-                          _vm._v(
-                            "\r\n                            Border\r\n                        "
-                          )
-                        ]
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "none" },
-                        on: { click: _vm.imageBorderChange }
-                      },
-                      [
-                        _vm._v(
-                          "\r\n                            None\r\n                        "
-                        )
-                      ]
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                _c("div", { staticClass: "field" }, [
-                  _c("label", { staticClass: "label" }, [_vm._v("Color")])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "field" },
-                  [
-                    _vm._v("\r\n              Red\r\n            "),
-                    _c("vue-slider", {
-                      ref: "slider",
-                      attrs: {
-                        tooltip: "false",
-                        min: 0,
-                        max: 255,
-                        processStyle: _vm.form.rSliderColor
-                      },
-                      model: {
-                        value: _vm.form.rValue,
-                        callback: function($$v) {
-                          _vm.form.rValue = $$v
-                        },
-                        expression: "form.rValue"
-                      }
-                    }),
-                    _vm._v("\r\n\r\n              Green\r\n            "),
-                    _c("vue-slider", {
-                      ref: "slider",
-                      attrs: {
-                        tooltip: "false",
-                        min: 0,
-                        max: 255,
-                        processStyle: _vm.form.gSliderColor
-                      },
-                      model: {
-                        value: _vm.form.gValue,
-                        callback: function($$v) {
-                          _vm.form.gValue = $$v
-                        },
-                        expression: "form.gValue"
-                      }
-                    }),
-                    _vm._v("\r\n\r\n            Blue\r\n            "),
-                    _c("vue-slider", {
-                      ref: "slider",
-                      attrs: {
-                        tooltip: "false",
-                        min: 0,
-                        max: 255,
-                        processStyle: _vm.form.bSliderColor
-                      },
-                      model: {
-                        value: _vm.form.bValue,
-                        callback: function($$v) {
-                          _vm.form.bValue = $$v
-                        },
-                        expression: "form.bValue"
-                      }
-                    })
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.quote,
+                      expression: "form.quote"
+                    }
                   ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "columns" }, [
-                  _c(
-                    "div",
-                    { staticClass: "column is-2 field is-marginless hash" },
-                    [
-                      _c("i", {
-                        staticClass: "fa fa-hashtag",
-                        attrs: { "aria-hidden": "true" }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "column is-3 field is-marginless" },
-                    [
-                      _c("div", { staticClass: "control" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.rValue,
-                              expression: "form.rValue"
-                            }
-                          ],
-                          staticClass: "input",
-                          attrs: { type: "number" },
-                          domProps: { value: _vm.form.rValue },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.form.rValue = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "column is-3 field is-marginless" },
-                    [
-                      _c("div", { staticClass: "control" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.gValue,
-                              expression: "form.gValue"
-                            }
-                          ],
-                          staticClass: "input",
-                          attrs: { type: "number" },
-                          domProps: { value: _vm.form.gValue },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.form.gValue = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "column is-3 field is-marginless" },
-                    [
-                      _c("div", { staticClass: "control" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.bValue,
-                              expression: "form.bValue"
-                            }
-                          ],
-                          staticClass: "input",
-                          attrs: { type: "number" },
-                          domProps: { value: _vm.form.bValue },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.form.bValue = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ]
-                  )
-                ])
-              ]),
+                  staticClass: "textarea",
+                  domProps: { value: _vm.form.quote },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.form.quote = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("div", { staticClass: "field" }, [
+              _c("label", { staticClass: "label" }, [_vm._v("Author")]),
               _vm._v(" "),
+              _c("div", { staticClass: "control" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.author,
+                      expression: "form.author"
+                    }
+                  ],
+                  staticClass: "textarea",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.form.author },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.form.author = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "field" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "field" },
+            [
+              _c("vue-slider", {
+                ref: "slider",
+                attrs: {
+                  tooltip: "false",
+                  min: 0,
+                  max: 255,
+                  processStyle: _vm.form.rSliderColor
+                },
+                model: {
+                  value: _vm.form.rValue,
+                  callback: function($$v) {
+                    _vm.form.rValue = $$v
+                  },
+                  expression: "form.rValue"
+                }
+              }),
+              _vm._v(" "),
+              _c("vue-slider", {
+                ref: "slider",
+                attrs: {
+                  tooltip: "false",
+                  min: 0,
+                  max: 255,
+                  processStyle: _vm.form.gSliderColor
+                },
+                model: {
+                  value: _vm.form.gValue,
+                  callback: function($$v) {
+                    _vm.form.gValue = $$v
+                  },
+                  expression: "form.gValue"
+                }
+              }),
+              _vm._v(" "),
+              _c("vue-slider", {
+                ref: "slider",
+                attrs: {
+                  tooltip: "false",
+                  min: 0,
+                  max: 255,
+                  processStyle: _vm.form.bSliderColor
+                },
+                model: {
+                  value: _vm.form.bValue,
+                  callback: function($$v) {
+                    _vm.form.bValue = $$v
+                  },
+                  expression: "form.bValue"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "columns" }, [
+            _c("div", { staticClass: "column field is-marginless" }, [
+              _c("div", { staticClass: "control" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.rValue,
+                      expression: "form.rValue"
+                    }
+                  ],
+                  staticClass: "input",
+                  attrs: { type: "number" },
+                  domProps: { value: _vm.form.rValue },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.form.rValue = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "column field is-marginless" }, [
+              _c("div", { staticClass: "control" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.gValue,
+                      expression: "form.gValue"
+                    }
+                  ],
+                  staticClass: "input",
+                  attrs: { type: "number" },
+                  domProps: { value: _vm.form.gValue },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.form.gValue = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "column field is-marginless" }, [
+              _c("div", { staticClass: "control" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.bValue,
+                      expression: "form.bValue"
+                    }
+                  ],
+                  staticClass: "input",
+                  attrs: { type: "number" },
+                  domProps: { value: _vm.form.bValue },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.form.bValue = $event.target.value
+                    }
+                  }
+                })
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "field" }, [
+          _c("div", { staticClass: "columns" }, [
+            _c("div", { staticClass: "column" }, [
               _c(
                 "div",
                 { staticClass: "field" },
@@ -41012,7 +40881,7 @@ var render = function() {
                       _c("btn", {
                         attrs: {
                           name: "<i class='fa fa-align-left' value='left'></i>",
-                          selected: true,
+                          selected: false,
                           value: "left"
                         }
                       }),
@@ -41021,7 +40890,7 @@ var render = function() {
                         attrs: {
                           name:
                             "<i class='fa fa-align-center' value='center'></i>",
-                          selected: false,
+                          selected: true,
                           value: "center"
                         }
                       }),
@@ -41038,368 +40907,285 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _c("div", { staticClass: "field" }, [
-                    _c("div", { staticClass: "control" }, [
-                      _c("div", { staticClass: "select" }, [
-                        _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.quoteTextStyle.fontType,
-                                expression: "form.quoteTextStyle.fontType"
-                              }
-                            ],
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.form.quoteTextStyle.fontType = $event.target
-                                  .multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              }
-                            }
-                          },
-                          [
-                            _c("option", { attrs: { value: "Arial" } }, [
-                              _vm._v("Arial")
-                            ]),
-                            _vm._v(" "),
-                            _c("option", { attrs: { value: "Courier" } }, [
-                              _vm._v("Courier")
-                            ]),
-                            _vm._v(" "),
-                            _c("option", { attrs: { value: "Verdana" } }, [
-                              _vm._v("Verdana")
-                            ]),
-                            _vm._v(" "),
-                            _c("option", { attrs: { value: "Georgia" } }, [
-                              _vm._v("Georgia")
-                            ])
-                          ]
-                        )
-                      ])
-                    ])
-                  ])
+                  _c("font-select", {
+                    attrs: { fonts: _vm.form.fonts },
+                    on: { selectFont: _vm.setQuoteFont }
+                  })
                 ],
                 1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "column" },
+              [
                 _c("label", { staticClass: "label" }, [_vm._v("Author")]),
                 _vm._v(" "),
-                _c("div", { staticClass: "field has-addons" }, [
-                  _c(
-                    "p",
-                    { staticClass: "control", attrs: { value: "display" } },
-                    [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "button",
-                          attrs: { value: "left" },
-                          on: { click: _vm.authorTextPositionChange }
-                        },
-                        [
-                          _c("i", {
-                            staticClass: "fa fa-align-left",
-                            attrs: { "aria-hidden": "true", value: "left" },
-                            on: { click: _vm.authorTextPositionChange }
-                          })
-                        ]
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "center" },
-                        on: { click: _vm.authorTextPositionChange }
-                      },
-                      [
-                        _c("i", {
-                          staticClass: "fa fa-align-center",
-                          attrs: { "aria-hidden": "true", value: "center" },
-                          on: { click: _vm.authorTextPositionChange }
-                        })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "right" },
-                        on: { click: _vm.authorTextPositionChange }
-                      },
-                      [
-                        _c("i", {
-                          staticClass: "fa fa-align-right",
-                          attrs: { "aria-hidden": "true", value: "right" },
-                          on: { click: _vm.authorTextPositionChange }
-                        })
-                      ]
-                    )
-                  ])
-                ]),
+                _c(
+                  "button-group",
+                  { on: { selectValue: _vm.authorTextPositionChange } },
+                  [
+                    _c("btn", {
+                      attrs: {
+                        name: "<i class='fa fa-align-left' value='left'></i>",
+                        selected: false,
+                        value: "left"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("btn", {
+                      attrs: {
+                        name:
+                          "<i class='fa fa-align-center' value='center'></i>",
+                        selected: true,
+                        value: "center"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("btn", {
+                      attrs: {
+                        name: "<i class='fa fa-align-right' value='right'></i>",
+                        selected: false,
+                        value: "right"
+                      }
+                    })
+                  ],
+                  1
+                ),
                 _vm._v(" "),
-                _c("div", { staticClass: "field" }, [
-                  _c("div", { staticClass: "control" }, [
-                    _c("div", { staticClass: "select" }, [
-                      _c(
-                        "select",
-                        {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.authorTextStyle.fontType,
-                              expression: "form.authorTextStyle.fontType"
-                            }
-                          ],
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.form.authorTextStyle.fontType = $event.target
-                                .multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            }
-                          }
-                        },
-                        [
-                          _c("option", { attrs: { value: "Arial" } }, [
-                            _vm._v("Arial")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "Courier" } }, [
-                            _vm._v("Courier")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "Verdana" } }, [
-                            _vm._v("Verdana")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "Georgia" } }, [
-                            _vm._v("Georgia")
-                          ])
-                        ]
-                      )
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
+                _c("font-select", {
+                  attrs: { fonts: _vm.form.fonts },
+                  on: { selectFont: _vm.setAuthorFont }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "column" },
+              [
                 _c("label", { staticClass: "label" }, [_vm._v("Style Bar")]),
                 _vm._v(" "),
-                _c("div", { staticClass: "field" }, [
-                  _c("label", [_vm._v("Position")])
-                ]),
+                _c(
+                  "button-group",
+                  { on: { selectValue: _vm.barPositionChange } },
+                  [
+                    _c("btn", {
+                      attrs: {
+                        name: "<i class='fa fa-align-left' value='left'></i>",
+                        selected: false,
+                        value: "left"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("btn", {
+                      attrs: {
+                        name:
+                          "<i class='fa fa-align-center' value='center'></i>",
+                        selected: true,
+                        value: "center"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("btn", {
+                      attrs: {
+                        name: "<i class='fa fa-align-right' value='right'></i>",
+                        selected: false,
+                        value: "right"
+                      }
+                    })
+                  ],
+                  1
+                ),
                 _vm._v(" "),
-                _c("div", { staticClass: "field has-addons" }, [
-                  _c(
-                    "p",
-                    { staticClass: "control", attrs: { value: "display" } },
-                    [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "button",
-                          attrs: { value: "left" },
-                          on: { click: _vm.barPositionChange }
-                        },
-                        [
-                          _c("i", {
-                            staticClass: "fa fa-align-left",
-                            attrs: {
-                              click: "barPositionChange",
-                              "aria-hidden": "true",
-                              value: "left"
-                            }
-                          })
-                        ]
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "center" },
-                        on: { click: _vm.barPositionChange }
-                      },
-                      [
-                        _c("i", {
-                          staticClass: "fa fa-align-center",
-                          attrs: {
-                            click: "barPositionChange",
-                            "aria-hidden": "true",
-                            value: "center"
-                          }
-                        })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "right" },
-                        on: { click: _vm.barPositionChange }
-                      },
-                      [
-                        _c("i", {
-                          staticClass: "fa fa-align-right",
-                          attrs: {
-                            click: "barPositionChange",
-                            "aria-hidden": "true",
-                            value: "right"
-                          }
-                        })
-                      ]
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "field" }, [
-                  _c("label", [_vm._v("Type")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "field has-addons" }, [
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "display" },
-                        on: { click: _vm.barShow }
-                      },
-                      [_vm._v("\r\n                Solid\r\n             ")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "none" },
-                        on: { click: _vm.barShow }
-                      },
-                      [_vm._v("\r\n              None\r\n            ")]
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
+                _c(
+                  "button-group",
+                  { on: { selectValue: _vm.barShow } },
+                  [
+                    _c("btn", {
+                      attrs: { name: "Solid", selected: true, value: "display" }
+                    }),
+                    _vm._v(" "),
+                    _c("btn", {
+                      attrs: { name: "None", selected: false, value: "none" }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "column" }, [
               _c("div", { staticClass: "field" }, [
-                _c("label", { staticClass: "label" }, [_vm._v("Overlay")]),
+                _c("label", { staticClass: "label" }, [_vm._v("Image Border")]),
                 _vm._v(" "),
-                _c("div", { staticClass: "field has-addons" }, [
-                  _c("p", { staticClass: "control" }, [
+                _c(
+                  "div",
+                  { staticClass: "field has-addons" },
+                  [
                     _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "overlay" },
-                        on: { click: _vm.overlayChange }
-                      },
-                      [_vm._v("\r\n              Overlay\r\n            ")]
+                      "button-group",
+                      { on: { selectValue: _vm.imageBorderChange } },
+                      [
+                        _c("btn", {
+                          attrs: {
+                            name: "On",
+                            selected: true,
+                            value: "display"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("btn", {
+                          attrs: { name: "Off", selected: false, value: "none" }
+                        })
+                      ],
+                      1
                     )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "border" },
-                        on: { click: _vm.overlayChange }
-                      },
-                      [_vm._v("\r\n              Border\r\n            ")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "bars" },
-                        on: { click: _vm.overlayChange }
-                      },
-                      [_vm._v("\r\n              Bars\r\n            ")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { value: "none" },
-                        on: { click: _vm.overlayChange }
-                      },
-                      [_vm._v("\r\n              None\r\n            ")]
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "field" }, [
-                !_vm.form.userImage
-                  ? _c("div", [
-                      _c("input", {
-                        attrs: { type: "file" },
-                        on: { change: _vm.onFileChange }
-                      })
-                    ])
-                  : _c("div", [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "button",
-                          on: { click: _vm.removeImage }
-                        },
-                        [_vm._v("Remove image")]
-                      )
-                    ])
+                  ],
+                  1
+                )
               ])
             ])
-          ]
-        )
-      ],
-      1
-    )
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "field" },
+          [
+            _c("label", { staticClass: "label" }, [_vm._v("Overlay")]),
+            _vm._v(" "),
+            _c(
+              "button-group",
+              { on: { selectValue: _vm.overlayChange } },
+              [
+                _c("btn", {
+                  attrs: { name: "Overlay", selected: true, value: "overlay" }
+                }),
+                _vm._v(" "),
+                _c("btn", {
+                  attrs: { name: "Border", selected: false, value: "border" }
+                }),
+                _vm._v(" "),
+                _c("btn", {
+                  attrs: { name: "Bars", selected: false, value: "bars" }
+                }),
+                _vm._v(" "),
+                _c("btn", {
+                  attrs: { name: "None", selected: false, value: "none" }
+                })
+              ],
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label" }, [
+            _vm._v("Water Mark/Copyright")
+          ]),
+          _vm._v(" "),
+          !_vm.form.userImage
+            ? _c("div", [
+                _c("input", {
+                  attrs: { type: "file" },
+                  on: { change: _vm.onFileChange }
+                })
+              ])
+            : _c(
+                "div",
+                [
+                  _c("div", { staticClass: "field" }, [
+                    _c(
+                      "button",
+                      { staticClass: "button", on: { click: _vm.removeImage } },
+                      [_vm._v("Remove image")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button-group",
+                    { on: { selectValue: _vm.watermarkPositionChange } },
+                    [
+                      _c("btn", {
+                        attrs: { name: "Top", selected: false, value: "top" }
+                      }),
+                      _vm._v(" "),
+                      _c("btn", {
+                        attrs: {
+                          name: "Bottom",
+                          selected: true,
+                          value: "bottom"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button-group",
+                    { on: { selectValue: _vm.watermarkPositionChange } },
+                    [
+                      _c("btn", {
+                        attrs: {
+                          name: "<i class='fa fa-align-left' value='left'></i>",
+                          selected: false,
+                          value: "left"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("btn", {
+                        attrs: {
+                          name:
+                            "<i class='fa fa-align-center' value='center'></i>",
+                          selected: true,
+                          value: "center"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("btn", {
+                        attrs: {
+                          name:
+                            "<i class='fa fa-align-right' value='right'></i>",
+                          selected: false,
+                          value: "right"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+        ])
+      ])
+    ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "field" }, [
+      _c("label", { staticClass: "label" }, [_vm._v("Background Image")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "field" }, [
+      _c("label", { staticClass: "label" }, [_vm._v("Text Color")]),
+      _vm._v(" "),
+      _c("div", {})
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -42973,9 +42759,124 @@ if (false) {
 }
 
 /***/ }),
-/* 66 */,
-/* 67 */,
-/* 68 */,
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(67)
+/* template */
+var __vue_template__ = __webpack_require__(68)
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\general\\btn.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] btn.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-cf1c3760", Component.options)
+  } else {
+    hotAPI.reload("data-v-cf1c3760", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 67 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        name: { required: true },
+        selected: { default: false },
+        value: { default: false },
+        lg: { default: false }
+    },
+
+    data: function data() {
+        return {
+            isActive: false
+        };
+    },
+
+
+    computed: {
+        href: function href() {
+            return '#' + this.name.toLowerCase().replace(/ /g, '-');
+        }
+    },
+
+    mounted: function mounted() {
+        this.isActive = this.selected;
+    }
+});
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.isActive,
+          expression: "isActive"
+        }
+      ]
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-cf1c3760", module.exports)
+  }
+}
+
+/***/ }),
 /* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -43555,9 +43456,9 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\general\\btn.vue"
+Component.options.__file = "resources\\assets\\js\\components\\general\\font-select.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] btn.vue: functional components are not supported with templates, they should use render functions.")}
+if (Component.options.functional) {console.error("[vue-loader] font-select.vue: functional components are not supported with templates, they should use render functions.")}
 
 /* hot reload */
 if (false) {(function () {
@@ -43566,9 +43467,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-cf1c3760", Component.options)
+    hotAPI.createRecord("data-v-085fd1a4", Component.options)
   } else {
-    hotAPI.reload("data-v-cf1c3760", Component.options)
+    hotAPI.reload("data-v-085fd1a4", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -43589,30 +43490,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        name: { required: true },
-        selected: { default: false },
-        value: { default: false },
-        lg: { default: false }
-    },
-
+    props: ['fonts'],
     data: function data() {
         return {
-            isActive: false
+            fontList: ''
         };
     },
 
-
-    computed: {
-        href: function href() {
-            return '#' + this.name.toLowerCase().replace(/ /g, '-');
+    methods: {
+        selectFont: function selectFont(e) {
+            this.$emit('selectFont', e.target.value);
         }
     },
-
+    computed: {},
     mounted: function mounted() {
-        this.isActive = this.selected;
+        console.log(this.fonts);
+
+        this.fontList = this.fonts;
     }
 });
 
@@ -43624,20 +43534,227 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "field" }, [
+    _c("div", { staticClass: "control" }, [
+      _c("div", { staticClass: "select" }, [
+        _c(
+          "select",
+          { on: { click: _vm.selectFont } },
+          _vm._l(_vm.fontList, function(font) {
+            return _c(
+              "option",
+              {
+                style: { "font-family": font.name, "font-size": font.fontSize },
+                domProps: { value: font.name }
+              },
+              [
+                _vm._v(
+                  " \r\n                     " +
+                    _vm._s(font.name) +
+                    " \r\n            "
+                )
+              ]
+            )
+          })
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-085fd1a4", module.exports)
+  }
+}
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(85)
+/* template */
+var __vue_template__ = __webpack_require__(86)
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\general\\image-grid.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] image-grid.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-63d9cb98", Component.options)
+  } else {
+    hotAPI.reload("data-v-63d9cb98", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['images'],
+    data: function data() {
+        return {
+            bgImages: [],
+            isActive: false
+        };
+    },
+
+    methods: {
+        backgroundSelect: function backgroundSelect(e) {
+            this.$emit('selectBg', e.target.src);
+            this.toggleModal();
+        },
+        toggleModal: function toggleModal() {
+            this.isActive = !this.isActive;
+        }
+    },
+    computed: {},
+    mounted: function mounted() {
+        this.bgImages = this.images;
+    }
+});
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      directives: [
-        {
-          name: "show",
-          rawName: "v-show",
-          value: _vm.isActive,
-          expression: "isActive"
-        }
-      ]
-    },
-    [_vm._t("default")],
-    2
+    {},
+    [
+      _c("button", { staticClass: "button", on: { click: _vm.toggleModal } }, [
+        _vm._v("Change Background Image")
+      ]),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "fade" } }, [
+        _vm.isActive
+          ? _c(
+              "div",
+              { staticClass: "modal", class: { "is-active": _vm.isActive } },
+              [
+                _c("div", { staticClass: "modal-background" }),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-content" }, [
+                  _c("header", { staticClass: "modal-card-head" }, [
+                    _c("p", { staticClass: "modal-card-title" }, [
+                      _vm._v("Select Background Image")
+                    ]),
+                    _vm._v(" "),
+                    _c("button", {
+                      staticClass: "delete",
+                      attrs: { "aria-label": "close" },
+                      on: { click: _vm.toggleModal }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("section", { staticClass: "modal-card-body" }, [
+                    _c(
+                      "div",
+                      { staticClass: "field image-grid" },
+                      _vm._l(_vm.images, function(image) {
+                        return _c(
+                          "figure",
+                          {
+                            staticClass: "image is-128x128",
+                            on: { click: _vm.backgroundSelect }
+                          },
+                          [_c("img", { attrs: { src: image.src } })]
+                        )
+                      })
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("footer", { staticClass: "modal-card-foot" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button is-danger is-outlined",
+                        on: { click: _vm.toggleModal }
+                      },
+                      [_vm._v("Cancel")]
+                    )
+                  ])
+                ])
+              ]
+            )
+          : _vm._e()
+      ])
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -43646,7 +43763,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-cf1c3760", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-63d9cb98", module.exports)
   }
 }
 
