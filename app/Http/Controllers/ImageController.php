@@ -147,5 +147,128 @@ class ImageController extends Controller
        
         return view('templates');
     }
+
+    public function freeTemplateSave(Request $request){
+        $fontColor = 'rgb('.$request->rValue.', '.$request->gValue.', '.$request->bValue.')';
+        $dimensions = '540';
+        
+        $url = $request->imageURL;
+        info($request);
+        //QUOTE 
+        $quote = $request->quote;
+        $quoteLength = count(explode(" ",$quote));
+        $quoteFontSize = '35';
+        $quoteFontType = $request->quoteTextStyle['fontType'];
+        $quotePosition = $request->quoteTextStyle['position'];
+        //AUTHOR
+        $author = $request->author;
+        $authorFontSize = '35';
+        $authorFontType = $request->authorTextStyle['fontType'];
+        $authorPosition = $request->authorTextStyle['position'];
+        //STYLE
+        $overlayOpacity = $request->overlayStyle['backgroundOpacity'];
+
+        $borderTop = $request->overlayStyle['borderTop'];
+        $borderBottom = $request->overlayStyle['borderBottom'];
+        $borderRight = $request->overlayStyle['borderRight'];
+        $borderLeft = $request->overlayStyle['borderLeft'];
+        
+        $barStyle = $request->overlayStyle['backgroundOpacity'];
+
+        $requestOuterBorderStyle = $request->borderStyle['border'];
+        $outerBorderWidth = ($requestOuterBorderStyle == '2px') ? 10 : 0;
+        $innerBorderWidth = ( $borderTop && $borderBottom && $borderRight && $borderLeft) ? 3 : 0;;
+
+
+        $spacer = $quoteFontSize + '10';
+
+        // Length of bar is 120
+        $offset = 120;
+        $seporatorYPadding = 210 - $offset;
+        $seporatorXPadding = 330 - $offset;
+
+            info($dimensions - $seporatorYPadding);
+        
+        if($quoteLength >= 10) {
+            $i = 180; //top start position of quote
+        } else if($quoteLength >= 8) {
+            $i = 200; //top start position of quote
+        } else if( $quoteLength >= 6) {
+            $i = 200; //top start position of quote
+        } else if( $quoteLength >= 4 || $quoteLength >= 0) {
+            $i = 220; //top start position of quote
+        }
+
+        $img = Image::make($url);
+
+        // FX
+        // $img->greyscale();
+        // $img->pixelate(28);
+        // $img->colorize(33, 18, -10);
+
+
+        $img->resize($dimensions, $dimensions)
+        ->rectangle(10, 10, 190, 190)
+        ->rectangle(0, 0, $dimensions, $dimensions, function ($draw) use ($fontColor, $outerBorderWidth){
+            $draw->background('rgba(255, 255, 255, 0)');
+            $draw->border($outerBorderWidth, $fontColor);
+        })
+        ->rectangle(50, 50, $dimensions - 50, $dimensions - 50, function ($draw) use ($overlayOpacity){
+            $draw->background('rgba(51, 51, 51, ' . $overlayOpacity . ')');
+        })
+        ->rectangle(50, 50, $dimensions - 50, $dimensions - 50, function ($draw) use ($fontColor, $innerBorderWidth){
+            $draw->border($innerBorderWidth, $fontColor);
+        });
+
+
+
+
+        // ****** Wrap Text onto different lines ******** //
+        $string = wordwrap($quote, 20, "|");
+        //create array of lines
+        $strings = explode("|", $string);
+        //for each line added
+
+        if($quotePosition == 'center'){
+           $quoteDimension = $dimensions/2;
+        }else if($quotePosition == 'left'){
+            $quoteDimension = $dimensions/6;
+        }else if($quotePosition == 'right') {
+            $quoteDimension = $dimensions - 90;
+        }
+
+        foreach($strings as $string){
+                $img->text($string,  $quoteDimension , $i, function($font) use ($fontColor, $quoteFontSize, $quotePosition){
+                $font->align($quotePosition);
+                $font->valign('center');
+                $font->file(public_path('fonts/Mukta/Mukta-Regular.ttf'));
+                $font->size($quoteFontSize);
+                $font->color($fontColor);
+
+            });
+            $i = $i + $spacer; //shift top postition down 42
+        }
+
+        $img->text($author, $dimensions/2, $i + $spacer, function($font) use ($fontColor, $authorFontSize){
+            $font->file(public_path('fonts/Mukta/Mukta-Regular.ttf'));
+            $font->size($authorFontSize);
+            $font->color($fontColor);
+            $font->align('center');
+            $font->valign('center');
+        });
+
+        // Spacer Bar alignment 
+        //          LP   topP  rP  BotP
+        $img->rectangle($seporatorYPadding, $i, $seporatorXPadding , $i + 1, function ($draw) use ($fontColor) {
+            $draw->background($fontColor);
+        });
+        $img->save('free.jpg', 100);
+
+         
+    }
+    public function downloadFreeImage(){
+        return view('free-image');
+        // return response()->download(public_path() . '/free.jpg');
+    }
 }
 

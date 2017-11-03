@@ -6,19 +6,25 @@
       <section class="section">
           <div class="container image-editor-header">
             
-            <h1 v-if='!template' class="title">New Template</h1>
+            <h1 v-if='!template && !free' class="title">New Template</h1>
             <h1 v-if='template' class="title">Edit Template</h1>
 
+            <h1 v-if='free' class="title">Free Download</h1>
+            
             <p class="subtitle">
 
               <span v-if='template'>Edit custom template</span>
-              <span v-if='!template'>Create a new custom template</span>
+              <span v-if='!template  && !free'>Create a new custom template</span>
 
-              <div class='save-buttons'>
+              <div v-if='!free' class='save-buttons'>
                 <a href='/user-templates'>
                   <button class='button'  @click="onSubmit">Save</button>
                 </a>
-                
+              </div>
+              <div v-if='free' class='save-buttons'>
+                <a href='/download-link-free'>
+                  <button class='button'  @click="onSubmit">Download</button>
+                </a>
               </div>
 
             </p>
@@ -240,18 +246,19 @@
 
 import vueSlider from 'vue-slider-component';
 import Form from '../helper/Form.js'
-
+import axios from 'axios';
 export default {
   components: {
       vueSlider
   },
-  props: ['template'],
+  props: ['template', 'free'],
   data () {
     return {
       form: new Form({
         quote: 'The Way Get Started Is To Quit Talking And Begin Doing.',
         author:'Walt Disney',
-        image: 'https://images.unsplash.com/photo-1500964757637-c85e8a162699?dpr=1&auto=compress,format&fit=crop&w=1078&h=&q=80&cs=tinysrgb&crop=',
+        image: 'backgrounds/background1.jpg',
+        imageURL: 'backgrounds/background1.jpg',
         userImage: '',
         typedQuote: '',
         isMoving: false,
@@ -282,7 +289,7 @@ export default {
           borderWidth: ''
         },
         borderStyle: {
-          border: ''
+          border: '2px'
         },
         watermarkStyle: {
           top: '',
@@ -342,7 +349,7 @@ export default {
         'color' : `rgb(${this.form.rValue}, ${this.form.gValue}, ${this.form.bValue})`,
         'border-width': this.form.borderStyle.border,
         'background': 'url(' + this.form.image +  ')',
-        'background-size': 'cover', /* or contain depending on what you want */
+        'background-size': 'cover',
         'background-position': 'center center',
         'background-repeat': 'no-repeat',
        ' text-align':'center',
@@ -401,8 +408,13 @@ export default {
   },
   methods: {
     onSubmit(){
-      this.form.post('/new-template');
-      // axios.get('/new-template');
+      if(this.free){
+        this.form.post('/free-template-save').then(() => {
+          return axios.get('/download-link-free');
+        });
+      } else {
+        this.form.post('/new-template');
+      }
     },
     quoteTextPositionChange(href, val){
       // console.log(b);
@@ -420,7 +432,8 @@ export default {
     overlayChange(e, val){
       var borderColor = `rgb(${this.form.rValue}, ${this.form.gValue}, ${this.form.bValue})`;
       var borderVal = `2px solid ${borderColor}`;
-      var noBorder = `0px solid ${borderColor}`;
+      // var noBorder = `0px solid ${borderColor}`;
+      var noBorder = null;
 
       if(val == 'none') {
 
@@ -466,8 +479,8 @@ export default {
 
       } else if(val == 'center') {
         
-        this.form.barStyle.marginRight = 'auto';
-        this.form.barStyle.marginLeft = 'auto';
+        this.form.barStyle.marginRight = null;
+        this.form.barStyle.marginLeft = null;
 
       }
     },
@@ -515,9 +528,10 @@ export default {
       // return str.split('').reverse().join('');
       return str;
     },
-    backgroundSelect(val){
-      // this.form.image = e.currentTarget.src;
+    backgroundSelect(val, rawURL){
+      console.log(rawURL);
       this.form.image = val;
+      this.form.imageURL = rawURL;
     },
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;

@@ -5,6 +5,13 @@
     /* margin:10px; */
     padding-top:60px;
   }
+
+  .test-image {
+    position: absolute;
+    right:0px;
+    width:400px;
+    height:400px;
+  }
   .image-editor-header {
     margin:10px;
   }

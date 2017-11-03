@@ -41,6 +41,7 @@
                             @else
                             <a class="navbar-item" href="{{ route('order') }}">Order</a>
                             <a class="navbar-item" href="{{ route('user-templates') }}">Template</a>
+                            <a class="navbar-item" href="{{ route('free') }}">Free Download</a>
                                 <div class="navbar-item has-dropdown is-hoverable">
                                     <a class="navbar-link" href="#">{{ Auth::user()->name }}</a>
                                     

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Response;
 
 class TemplateController extends Controller
 {
@@ -91,5 +93,13 @@ class TemplateController extends Controller
        return view('templates', [
            'userTemplates' => $userTemplates
        ]);
+    }
+    public function free()
+    {
+       return view('free-image');
+    }
+    public function download()
+    {
+     
     }
 }

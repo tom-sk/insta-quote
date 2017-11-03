@@ -15,8 +15,8 @@
                             </header>
                             <section class="modal-card-body">
                             <div class='field image-grid'>
-                                <figure @click='backgroundSelect' v-for='image in images' class="image is-128x128">
-                                    <img :src="image.src">
+                                <figure @click='backgroundSelect' v-for='(image, i) in images' class="image is-128x128">
+                                    <img :index='i + 1' :src="getPic(i)">
                                 </figure>
                             </div>
                             </section>
@@ -45,11 +45,16 @@ export default {
     },
     methods: {
        backgroundSelect(e){
-           this.$emit('selectBg', e.target.src);
+        var index = event.target.attributes.index.value;
+
+           this.$emit('selectBg', e.target.src, 'backgrounds/background' + index + '.jpg');
            this.toggleModal();
        },
        toggleModal(){
             this.isActive = !this.isActive;
+       },
+       getPic(index){
+           return 'backgrounds/background' + (index + 1) + '.jpg';
        }
     },
     computed: {
